@@ -1,28 +1,16 @@
-
 # 라이브러리 불러오기 
 import altair as alt 
 import pandas as pd
 import numpy as np
 import datetime
-import joblib
-import base64
-from keras.models import load_model
-from haversine import haversine
-from urllib.parse import quote
+import folium
 import streamlit as st
 from streamlit_folium import st_folium
-import folium
-import branca
-from geopy.geocoders import Nominatim
-import ssl
-from urllib.request import urlopen
-import plotly.express as px
 from pyparsing import empty
 from PIL import Image
 from streamlit_option_menu import option_menu
 
 # -------------------- ▼ 필요 함수 생성 코딩 Start ▼ --------------------
-
 
 ## 경로
 IMAGE = 'C:/Users/user/Desktop/streamlit/image'
