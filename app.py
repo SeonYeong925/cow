@@ -7,20 +7,16 @@ import streamlit as st
 from PIL import Image
 from streamlit_option_menu import option_menu
 
-# -------------------- ▼ 필요 함수 생성 코딩 Start ▼ --------------------
-
 ## 경로
-IMAGE = 'C:/Users/user/Desktop/streamlit/image'
-# MODEL = 'C:/Users/user/Desktop/streamlit/model'
-data = pd.read_csv('C:/Users/user/Desktop/streamlit/sample.csv', encoding='UTF8')
+IMAGE = './streamlit/image'
+
+# 데이터 로드
+data = pd.read_csv('./streamlit/sample.csv', encoding='UTF8')
 data['개월령'] = data['개월령'].apply(lambda x: str(x)+' 개월')
 data['육량등급'] = data['육량등급'].apply(lambda x: str(x)+' 등급')
 data['BCS'] = data['BCS'].apply(lambda x: str(x)+' 등급')
 
-def open_image(path: str):
-    with open(path, "rb") as p:
-        file = p.read()
-        return f"data:image/png;base64,{base64.b64encode(file).decode()}"
+# -------------------- ▼ 필요 함수 생성 코딩 Start ▼ --------------------
 
 # 성장 및 사육 단계에 따른 목표 체중
 def feed_a(weight, month, kind): # weight:무게, month:개월, kind:품종(비육우, 번식우)
@@ -37,8 +33,7 @@ def feed_a(weight, month, kind): # weight:무게, month:개월, kind:품종(비�
                     print(f'목표체중 {j}kg을 달성했습니다. \n')
                 else:
                     print(f'현재 체중이 목표체중보다 {weight - j}kg 높습니다. \n급이량을 조금 줄여야합니다!')
-                break
-                
+                break     
     else:
         for i, j in zip(mon, wgh_2):
             if month <= i:
@@ -50,11 +45,12 @@ def feed_a(weight, month, kind): # weight:무게, month:개월, kind:품종(비�
                     print('현재 체중이 목표체중보다 높습니다. \n급이량을 조금 줄여야합니다!')
                 break
 
-
-def cal_thi(temperature, humidity): # 가축더위지수
+# 가축더위지수
+def cal_thi(temperature, humidity): 
     return (1.8 * temperature + 32) - ((0.55 - 0.0055 * humidity) * (1.8 * temperature - 26.8))
 
-def sel_season(month): # 해당 월 추출하여 계절 알아내기
+# 해당 월 추출하여 계절 알아내기
+def sel_season(month): 
     if 3 <= month <= 5 or 9 <= month <= 11:
         return "봄, 가을"
     elif 6 <= month <= 8:
@@ -62,6 +58,7 @@ def sel_season(month): # 해당 월 추출하여 계절 알아내기
     else:
         return "겨울"
 
+# 가축더위지수 기반 가이드
 def cattle_healthcare(kind, thi, month):
     # season = sel_season(month)
     season = '여름'
@@ -110,8 +107,7 @@ def cattle_healthcare(kind, thi, month):
                 return st.warning("[경고]:심박수 증가, 직장온도 증가, 사료섭취량 감소, 반추 시간 감소, 스트레스 가중시 폐사 위험, 급여 8% 상향, 마른 깔짚 제공")
             else:
                 return st.error("[위험]:심박수, 직장온도 증가, 코티졸 증가, 폐사율 증가, 급여 11% 상향")
-            
-
+    
         elif kind == "비육우":
             if -2.4 <= temperature <= 0.7:
                 return st.success("[양호]:가축사육을 위한 적정환경")
@@ -122,6 +118,7 @@ def cattle_healthcare(kind, thi, month):
             else:
                 return st.error("[위험]:물 부족, 심박수 증가, 직장온도 증가, 폐사율 증가")
             
+# 개체 현황 시각화
 def cow_management(cow_image, eartag, sensor, wgt, cow_year, cow_month, cow_day):
     now_date = datetime.datetime.today()
     months = (now_date.year - cow_year) * 12 +(now_date.month - cow_month)
@@ -129,10 +126,10 @@ def cow_management(cow_image, eartag, sensor, wgt, cow_year, cow_month, cow_day)
     col2100, col2101 = st.columns([.4,.6])
     with col2100:
         path = f"{IMAGE}/{cow_image}.jpg"
-        cow_image = Image.open(path)
-        width, height = cow_image.size
-        cow_image = cow_image.resize((int(width * 0.5), int(height * 0.5)), Image.ANTIALIAS)
-        st.image(cow_image)
+        # cow_image = Image.open(path)
+        # width, height = cow_image.size
+        # cow_image = cow_image.resize((int(width * 0.5), int(height * 0.5)), Image.ANTIALIAS)
+        st.image(path)
         
     with col2101:
         col210, col211, col212, col213 = st.columns(4)
@@ -168,11 +165,11 @@ def cow_management(cow_image, eartag, sensor, wgt, cow_year, cow_month, cow_day)
 
 
 
-# -------------------- ▼ 1-0그룹 Streamlit 웹 화면 구성 Tab 생성 START ▼ --------------------
+# -------------------- ▼ 스트림릿 레이아웃 구성 ▼ --------------------
 
-# 레이아웃 구성하기 
 st.set_page_config(layout="wide")
 
+# 사이드 바
 with st.sidebar:
     choice = option_menu("메뉴", ["홈", "개체현황", "급이관리", "출하일정"],
                          icons=['house', 'kanban', 'bi bi-robot', 'calendar2-check'],
@@ -184,6 +181,7 @@ with st.sidebar:
         "nav-link-selected": {"background-color": "#08c7b4"},}
     )
 
+# 홈 화면
 def main_page():
     # st.title('🏠홈')
     # 제목 넣기
@@ -192,10 +190,9 @@ def main_page():
     # 시간 정보 가져오기 
     now_date = datetime.datetime.today().strftime("%Y-%m-%d")
     
+    # -------------------------------------------------------------------------------------
     
     st.markdown("#### [당진시 날씨]")
-
-    # -------------------------------------------------------------------------------------
      
     col110, col111, col112, col113, col114, col115 = st.columns([0.1, 0.2, 0.1, 0.2 , 0.1, 0.2])
     with col110:
@@ -229,7 +226,6 @@ def main_page():
     with col125:
         thi = cal_thi(gajuk_temp, gajuk_hum)
         gajuk_thi = st.code(f'{thi:.2f}')
-        
 
     # -------------------------------------------------------------------------------------
 
@@ -244,8 +240,6 @@ def main_page():
         st.info('비육우 가이드')
     with col141:
         cattle_healthcare('비육우', thi, month)
-
-   ##-------------------------------------------------------------------------------------
 
     st.write('')
     st.write('')
@@ -267,8 +261,6 @@ def main_page():
         check = st.checkbox('46 ~ 50번 섹터 송아지 예방접종')
         check = st.checkbox('9번 섹터 28번 번식우 출산 예정')
 
-   ## -------------------------------------------------------------------------------------    
-
     st.write('')
     st.write('')
     st.write('')
@@ -278,18 +270,14 @@ def main_page():
     col150, col151= st.columns([0.1, 0.1])
     with col150:
         st.markdown("#### [축산 뉴스]")
-        img1 = Image.open(f"{IMAGE}/image1.png")
-        st.image(img1)
-        img2 = Image.open(f"{IMAGE}/image2.png")
-        st.image(img2)
-        img3 = Image.open(f"{IMAGE}/image3.png")
-        st.image(img3)
+        st.image(f"{IMAGE}/image1.png")
+        st.image(f"{IMAGE}/image2.png")
+        st.image(f"{IMAGE}/image3.png")
     with col151:
         st.markdown("#### [위험관리]")
-        img4 = Image.open(f"{IMAGE}/image6.png")
-        st.image(img4)
+        st.image(f"{IMAGE}/image6.png")
     
-    
+# 개체 현황 화면
 def page2():
     st.markdown("<h1 style='text-align: center; color: black;'>🐮개체현황🐮</h1>", unsafe_allow_html=True)
     
@@ -304,30 +292,25 @@ def page2():
         select_id = st.selectbox('이표번호',
                                  options = ['Sector1', '9990 3040 1', '9990 3040 2', '9990 3040 3', '9990 3040 4'])
     with col203:
-        st.write(' ')
-        st.write(' ')
-        
+        st.write('')
+        st.write('')
+
+   ## -------------------------------------------------------------------------------------    
+
     ids = {x:i for i, x in enumerate(['Sector1', '9990 3040 1', '9990 3040 2', '9990 3040 3', '9990 3040 4'])}
     c_id = ids[select_id]
     cow_img = ['all', '1', '2', '3', '4'][c_id]
-    cow_all = Image.open(f"{IMAGE}/cow_{cow_img}.jpg")
-    width, height = cow_all.size
-    cow_all = cow_all.resize((int(width * 0.35), int(height * 0.35)), Image.ANTIALIAS)
     if select_id == 'Sector1':
-        st.image(cow_all)
+        st.image(f"{IMAGE}/cow_{cow_img}.jpg")
     else:
         sensors = [0, 'D041194', 'D041195', 'D041196', 'D041197', ]
         weights = [0, '600kg(A)', '430kg(C)', '520kg(B)', '560kg(B)']
         years = [2021]*5
         months = [3,1,3,3,2]
         days = [4,4,10,6,28]
-        # col210, col211 = st.columns([.7,.3])
-        # with col210:
-        #     st.image(cow_all)
-        # with col211:
         cow_management(f'cow_{cow_img}', select_id, sensors[c_id], weights[c_id], years[c_id], months[c_id], days[c_id])
             
-    
+# 급이관리 화면
 def page3():
     st.markdown("<h1 style='text-align: center; color: black;'>🌱급이관리🌱</h1>", unsafe_allow_html=True)
     st.write('')
@@ -351,36 +334,18 @@ def page3():
         st.markdown(st1, unsafe_allow_html=True)
         st.metric(label = '', value = '3마리', delta = '-전날 대비 3마리', label_visibility='collapsed')
     st.write('')
-    # with col305:
-    #     care2 = Image.open(f"{IMAGE}/care.png")
-    #     width, height = care2.size
-    #     care2 = care2.resize((int(width * 1.0), int(height * 0.7)), Image.ANTIALIAS)
-    #     st.image(care2)
-
     
-    # col321, col322 = st.columns([.8,.2])
-    # with col321:
-    #     care1 = Image.open(f"{IMAGE}/care1.png")
-    #     width, height = care1.size
-    #     care1 = care1.resize((int(width * 1.0), int(height * 1.0)), Image.ANTIALIAS)
-    #     st.image(care1)
-    # with col322:
-    #     care2 = Image.open(f"{IMAGE}/care3.png")
-    #     width, height = care2.size
-    #     care2 = care2.resize((int(width * 1.0), int(height * 0.7)), Image.ANTIALIAS)
-    #     st.image(care2)
-    care1 = Image.open(f"{IMAGE}/care1.png")
-    width, height = care1.size
-    care1 = care1.resize((int(width * 1.0), int(height * 1.0)), Image.ANTIALIAS)
-    st.image(care1)
+   ## -------------------------------------------------------------------------------------    
     
+    st.image(f"{IMAGE}/care1.png")
+    
+# 출하일정 화면
 def page4():
     st.markdown("<h1 style='text-align: center; color: black;'>📆출하일정📆</h1>", unsafe_allow_html=True)
     st.write('')
     st.write('')
     
     st.markdown('### AI 예측 등급')
-    # data['file'] = data.apply(lambda x: open_image(x["file"]), axis=1)
 
     st.dataframe(
         data,
@@ -397,13 +362,14 @@ def page4():
     st.write('')
     st.write('')
     
+   ## -------------------------------------------------------------------------------------    
+    
     col4001, col4002 = st.columns([.37,.63])
     with col4001:
-        st.image(Image.open(f"{IMAGE}/cow/c1_r.jpg"))
+        st.image(f"{IMAGE}/cow/c1_r.jpg")
     with col4002: 
-        st.image(Image.open(f"{IMAGE}/cow/c2_r.jpg"))
+        st.image(f"{IMAGE}/cow/c2_r.jpg")
         
-    
-
+# 사이드바에서 선택한 메뉴로 화면 바꾸기
 page_names = {'홈': main_page, '개체현황':page2, '급이관리':page3, '출하일정':page4}
 page_names[choice]()
