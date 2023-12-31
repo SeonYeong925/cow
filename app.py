@@ -4,7 +4,6 @@ import pandas as pd
 import numpy as np
 import datetime
 import streamlit as st
-from PIL import Image
 from streamlit_option_menu import option_menu
 
 ## 경로
