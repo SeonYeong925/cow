@@ -1,6 +1,6 @@
 # 라이브러리 불러오기 
-!pipenv install streamlit
-!pipenv install streamlit-option-menu
+pipenv install streamlit
+pipenv install streamlit-option-menu
 import altair as alt 
 import pandas as pd
 import numpy as np
