@@ -347,13 +347,13 @@ def page4():
     st.dataframe(
         data,
         width = 1200,
-        column_config={
-            "예상확률": st.column_config.ProgressColumn(
-                "확률(%)",help="BCS",
-                format="%f",
-                min_value=0, max_value=100,
-            )
-        }, 
+        # column_config={
+        #     "예상확률": st.column_config.ProgressColumn(
+        #         "확률(%)",help="BCS",
+        #         format="%f",
+        #         min_value=0, max_value=100,
+        #     )
+        # }, 
     )
     
     st.write('')
