@@ -4,7 +4,6 @@ import pandas as pd
 import numpy as np
 import datetime
 import streamlit as st
-from pyparsing import empty
 from PIL import Image
 from streamlit_option_menu import option_menu
 
@@ -305,7 +304,8 @@ def page2():
         select_id = st.selectbox('이표번호',
                                  options = ['Sector1', '9990 3040 1', '9990 3040 2', '9990 3040 3', '9990 3040 4'])
     with col203:
-        empty()
+        st.write(' ')
+        st.write(' ')
         
     ids = {x:i for i, x in enumerate(['Sector1', '9990 3040 1', '9990 3040 2', '9990 3040 3', '9990 3040 4'])}
     c_id = ids[select_id]
