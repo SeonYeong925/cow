@@ -361,11 +361,11 @@ def page4():
     
    ## -------------------------------------------------------------------------------------    
     
-    col4001, col4002 = st.columns([.2,.8])
+    col4001, col4002 = st.columns([.3,.7])
     with col4001:
         st.image(f"{IMAGE}/cow/c1_r.jpg")
     with col4002: 
-        st.image(f"{IMAGE}/cow/c2_r.png")
+        st.image(f"{IMAGE}/cow/c2_r.png", width=700)
         
 # 사이드바에서 선택한 메뉴로 화면 바꾸기
 page_names = {'홈': main_page, '개체관리':page2, '스트레스관리':page3, '출하관리':page4}
