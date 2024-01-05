@@ -168,14 +168,14 @@ st.set_page_config(layout="wide")
 
 # 사이드 바
 with st.sidebar:
-    choice = option_menu("메뉴", ["홈", "개체현황", "급이관리", "출하일정"],
+    choice = option_menu("메뉴", ["홈", "개체관리", "스트레스관리", "출하관리"],
                          icons=['house', 'kanban', 'bi bi-robot', 'calendar2-check'],
                          menu_icon="app-indicator", default_index=0,
                          styles={
         "container": {"padding": "4!important", "background-color": "#fafafa"},
         "icon": {"color": "darkgreen", "font-size": "25px"},
         "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#fafafa"},
-        "nav-link-selected": {"background-color": "#08c7b4"},}
+        "nav-link-selected": {"background-color": "#08c7b4"}}
     )
 
 # 홈 화면
@@ -276,7 +276,7 @@ def main_page():
     
 # 개체 현황 화면
 def page2():
-    st.markdown("<h1 style='text-align: center; color: black;'>🐮개체현황🐮</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center; color: black;'>🐮개체 관리🐮</h1>", unsafe_allow_html=True)
     
     col200, col201, col202, col203 = st.columns([0.2, 0.2, 0.2, .4])
     with col200:
@@ -309,7 +309,7 @@ def page2():
             
 # 급이관리 화면
 def page3():
-    st.markdown("<h1 style='text-align: center; color: black;'>🌱급이관리🌱</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center; color: black;'>🌱스트레스 관리🌱</h1>", unsafe_allow_html=True)
     st.write('')
     st.write('')
     
@@ -338,7 +338,7 @@ def page3():
     
 # 출하일정 화면
 def page4():
-    st.markdown("<h1 style='text-align: center; color: black;'>📆출하일정📆</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center; color: black;'>📆출하 관리📆</h1>", unsafe_allow_html=True)
     st.write('')
     st.write('')
     
@@ -368,5 +368,5 @@ def page4():
         st.image(f"{IMAGE}/cow/c2_r.jpg")
         
 # 사이드바에서 선택한 메뉴로 화면 바꾸기
-page_names = {'홈': main_page, '개체현황':page2, '급이관리':page3, '출하일정':page4}
+page_names = {'홈': main_page, '개체관리':page2, '스트레스관리':page3, '출하관리':page4}
 page_names[choice]()
